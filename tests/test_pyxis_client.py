@@ -1,3 +1,4 @@
+import json
 import mock
 import requests_mock
 
@@ -43,3 +44,47 @@ def test_get_operator_indices():
         my_client = pyxis_client.PyxisClient(hostname, 5, None, 3, True)
         res = my_client.get_operator_indices(ver, org)
         assert res == data
+
+
+def test_get_signatures():
+    hostname = "https://pyxis.engineering.redhat.com/"
+    data = json.load(open("tests/test_data/sigs_with_reference.json"))
+    with requests_mock.Mocker() as m:
+        m.get(
+            "{0}v1/signatures".format(hostname),
+            json={"data": data},
+        )
+
+        my_client = pyxis_client.PyxisClient(hostname, 5, None, 3, True)
+        res = my_client.get_container_signatures(None, None, None)
+        assert res == data
+
+
+def test_get_signatures_with_digest_reference():
+    hostname = "https://pyxis.engineering.redhat.com/"
+    data = json.load(open("tests/test_data/sigs_with_reference.json"))[0:2]
+    manifest_to_search = (
+        "sha256:998046100b4affa43df4348f3616cff3b05983a8e7397a53c40fab143db5a742"
+    )
+    reference_to_search = (
+        "registry.redhat.io/e2e-container/rhel-8-e2e-container-test-"
+        "product:latest,registry.access.redhat.com/e2e-container/rhel-8-e2e-container-test-"
+        "product:latest"
+    )
+    url_with_digest_ref = (
+        "{0}v1/signatures?filter=manifest_digest=in=({1}),reference=in=({2})".format(
+            hostname, manifest_to_search, reference_to_search
+        )
+    )
+    with requests_mock.Mocker() as m:
+        m.get(
+            url_with_digest_ref,
+            json={"data": data},
+        )
+
+        my_client = pyxis_client.PyxisClient(hostname, 5, None, 3, True)
+        res = my_client.get_container_signatures(
+            manifest_to_search, reference_to_search, None
+        )
+        assert res == data
+        assert m.request_history[0].url == url_with_digest_ref

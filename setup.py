@@ -83,6 +83,7 @@ setup(
     entry_points={
         "console_scripts": [
             "pubtools-pyxis-get-operator-indices = pubtools._pyxis.pyxis_ops:get_operator_indices_main",
+            "pubtools-pyxis-get-signatures = pubtools._pyxis.pyxis_ops:get_signatures_main"
         ]
     },
     include_package_data=True,
