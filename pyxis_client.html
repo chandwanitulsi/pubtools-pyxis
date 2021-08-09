@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Pyxis Client &mdash; pubtools-pyxis 1.2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Entrypoint helper functions" href="ops_helpers.html" />
+    <link rel="prev" title="Pyxis Session" href="pyxis_session.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pubtools-pyxis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">pubtools-pyxis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entrypoints_reference.html">Entrypoints reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules_reference.html">Modules reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyxis_authentication.html">Pyxis Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyxis_session.html">Pyxis Session</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pyxis Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ops_helpers.html">Entrypoint helper functions</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">ChangeLog</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pubtools-pyxis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules_reference.html">Modules reference</a> &raquo;</li>
+        
+      <li>Pyxis Client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pyxis_client.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pubtools._pyxis.pyxis_client">
+<span id="pyxis-client"></span><h1>Pyxis Client<a class="headerlink" href="#module-pubtools._pyxis.pyxis_client" title="Permalink to this headline">¶</a></h1>
+<p>Class for performing actual Pyxis queries and handling related logic.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_client.</span></span><span class="sig-name descname"><span class="pre">PyxisClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backoff_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pyxis requests wrapper.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backoff_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>hostname (str)</dt><dd><p>Pyxis service hostname.</p>
+</dd>
+<dt>retries (int)</dt><dd><p>number of http retries for Pyxis requests.</p>
+</dd>
+<dt>auth (PyxisAuth)</dt><dd><p>PyxisAuth subclass instance.</p>
+</dd>
+<dt>backoff_factor (int)</dt><dd><p>backoff factor to apply between attempts after the second try.</p>
+</dd>
+<dt>verify (bool)</dt><dd><p>enable/disable SSL CA verification.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient.get_operator_indices">
+<span class="sig-name descname"><span class="pre">get_operator_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ocp_versions_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">organization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient.get_operator_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient.get_operator_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of index images satisfying versioning and organization conditions.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>ocp_versions_range (str)</dt><dd><p>Supported OCP versions range.</p>
+</dd>
+<dt>organization (str)</dt><dd><p>Organization understood by IIB.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>list: List of index images satisfying the conditions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient.get_repository_metadata">
+<span class="sig-name descname"><span class="pre">get_repository_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_internal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_partner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient.get_repository_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient.get_repository_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get metadata of a Comet repository.</p>
+<p>If checking only one registry hasn’t been specified, check both with precedence on
+the internal registry.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>repo_name (str):</dt><dd><p>Name of the repository.</p>
+</dd>
+<dt>custom_registry (str):</dt><dd><p>Use a custom registry address instead of the default ones.</p>
+</dd>
+<dt>only_internal (bool):</dt><dd><p>Whether to only check internal registry.</p>
+</dd>
+<dt>only_partner (bool):</dt><dd><p>Whether to only check partner registry.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns (dict):</dt><dd><p>Metadata of the repository.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient.upload_signatures">
+<span class="sig-name descname"><span class="pre">upload_signatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signatures</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient.upload_signatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient.upload_signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload signatures from given JSON string.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>signatures (str)</dt><dd><p>JSON with signatures to upload.  See Pyxis API for details.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>list: List of uploaded signatures including auto-populated fields.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient._parse_response">
+<span class="sig-name descname"><span class="pre">_parse_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient._parse_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient._parse_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get JSON from given response or raise an informative exception.</p>
+<p>Uses <cite>requests.raise_for_status()</cite> but tries to extract more details.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient.get_container_signatures">
+<span class="sig-name descname"><span class="pre">get_container_signatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">manifest_digests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient.get_container_signatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient.get_container_signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of signature metadata matching given fields.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>manifest_digests (comma separated str)</dt><dd><p>manifest_digest used for searching in signatures.</p>
+</dd>
+<dt>references (comma separated str)</dt><dd><p>pull reference for image of signature stored.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>list: List of signature metadata matching given fields.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient._get_items_from_all_pages">
+<span class="sig-name descname"><span class="pre">_get_items_from_all_pages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient._get_items_from_all_pages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient._get_items_from_all_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get response from all pages of pyxis.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>endpoint (str): Endpoint of the request.
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Additional arguments to add to the requests method.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: list of all data records returned from pyxis</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_client.PyxisClient.delete_container_signatures">
+<span class="sig-name descname"><span class="pre">delete_container_signatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signature_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_client.html#PyxisClient.delete_container_signatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_client.PyxisClient.delete_container_signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete signatures matching given fields.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>signature_ids ([str])</dt><dd><p>Internal Pyxis signature IDs of signatures which should be removed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ops_helpers.html" class="btn btn-neutral float-right" title="Entrypoint helper functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pyxis_session.html" class="btn btn-neutral float-left" title="Pyxis Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Red Hat.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

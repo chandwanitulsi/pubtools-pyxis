@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pubtools._pyxis.pyxis_ops &mdash; pubtools-pyxis 1.2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pubtools-pyxis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">pubtools-pyxis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../entrypoints_reference.html">Entrypoints reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules_reference.html">Modules reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">ChangeLog</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pubtools-pyxis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pubtools._pyxis.pyxis_ops</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pubtools._pyxis.pyxis_ops</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">from</span> <span class="nn">.pyxis_authentication</span> <span class="kn">import</span> <span class="n">PyxisKrbAuth</span><span class="p">,</span> <span class="n">PyxisSSLAuth</span>
+<span class="kn">from</span> <span class="nn">.pyxis_client</span> <span class="kn">import</span> <span class="n">PyxisClient</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">setup_arg_parser</span>
+
+
+<span class="n">CMD_ARGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;--pyxis-server&quot;</span><span class="p">,):</span> <span class="p">{</span>
+        <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Pyxis service hostname&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">(</span><span class="s2">&quot;--pyxis-insecure&quot;</span><span class="p">,):</span> <span class="p">{</span>
+        <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow insecure connection to Pyxis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">(</span><span class="s2">&quot;--pyxis-krb-principal&quot;</span><span class="p">,):</span> <span class="p">{</span>
+        <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Pyxis kerberos principal in form: name@REALM&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">(</span><span class="s2">&quot;--pyxis-krb-ktfile&quot;</span><span class="p">,):</span> <span class="p">{</span>
+        <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Pyxis Kerberos client keytab. Optional. Used for login if TGT is not available.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">(</span><span class="s2">&quot;--pyxis-ssl-crtfile&quot;</span><span class="p">,):</span> <span class="p">{</span>
+        <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Path to .crt file for the SSL authentication&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">(</span><span class="s2">&quot;--pyxis-ssl-keyfile&quot;</span><span class="p">,):</span> <span class="p">{</span>
+        <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Path to .key file for the SSL authentication&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">GET_OPERATORS_INDICES_ARGS</span> <span class="o">=</span> <span class="n">CMD_ARGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">GET_OPERATORS_INDICES_ARGS</span><span class="p">[(</span><span class="s2">&quot;--ocp-versions-range&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Supported OCP versions range. &quot;</span>
+    <span class="s2">&quot;See https://docs.engineering.redhat.com/display/CFC/Delivery&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">GET_OPERATORS_INDICES_ARGS</span><span class="p">[(</span><span class="s2">&quot;--organization&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Organization as understood by IIB&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">GET_REPO_METADATA_ARGS</span> <span class="o">=</span> <span class="n">CMD_ARGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">GET_REPO_METADATA_ARGS</span><span class="p">[(</span><span class="s2">&quot;--repo-name&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Name of the repository&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">GET_REPO_METADATA_ARGS</span><span class="p">[(</span><span class="s2">&quot;--custom-registry&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom registry address. Will be used instead of the default addresses.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">GET_REPO_METADATA_ARGS</span><span class="p">[(</span><span class="s2">&quot;--only-internal-registry&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Check only internal registry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">GET_REPO_METADATA_ARGS</span><span class="p">[(</span><span class="s2">&quot;--only-partner-registry&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Check only partner registry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">UPLOAD_SIGNATURES_ARGS</span> <span class="o">=</span> <span class="n">CMD_ARGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">UPLOAD_SIGNATURES_ARGS</span><span class="p">[(</span><span class="s2">&quot;--signatures&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Signatures in JSON format (as a string) or an @-prefixed file path&quot;</span>
+    <span class="s2">&quot; with JSON, e.g. --signatures=@/tmp/filename.json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">GET_SIGNATURES_ARGS</span> <span class="o">=</span> <span class="n">CMD_ARGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">GET_SIGNATURES_ARGS</span><span class="p">[(</span><span class="s2">&quot;--manifest-digest&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;comma separated manifest-digests to search or json file when prefixed with @&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">GET_SIGNATURES_ARGS</span><span class="p">[(</span><span class="s2">&quot;--reference&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;comma separated container pull reference to search or json file when prefixed with @&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">DELETE_SIGNATURES_ARGS</span> <span class="o">=</span> <span class="n">CMD_ARGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">DELETE_SIGNATURES_ARGS</span><span class="p">[(</span><span class="s2">&quot;--ids&quot;</span><span class="p">,)]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;comma separated signature IDs to remove or json file when prefixed with @&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="setup_pyxis_client"><a class="viewcode-back" href="../../../ops_helpers.html#pubtools._pyxis.pyxis_ops.setup_pyxis_client">[docs]</a><span class="k">def</span> <span class="nf">setup_pyxis_client</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">ccache_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a PyxisClient instance according to specified parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args (argparse.Namespace)</span>
+<span class="sd">            Arguments of the program.</span>
+<span class="sd">        cache_dir (str):</span>
+<span class="sd">            Path to a file used for storing ccache by Kerberos authentication.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        PyxisClient: Configured PyxisClient instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If both auths are specified, Kerberos is preferred</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pyxis_krb_principal</span><span class="p">:</span>
+        <span class="n">auth</span> <span class="o">=</span> <span class="n">PyxisKrbAuth</span><span class="p">(</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">pyxis_krb_principal</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">pyxis_server</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">pyxis_krb_ktfile</span><span class="p">,</span>
+            <span class="n">ccache_file</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">pyxis_ssl_crtfile</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">pyxis_ssl_keyfile</span><span class="p">:</span>
+        <span class="n">auth</span> <span class="o">=</span> <span class="n">PyxisSSLAuth</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pyxis_ssl_crtfile</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pyxis_ssl_keyfile</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Either Kerberos principal (and optionally keytab) or .crt and .key &quot;</span>
+            <span class="s2">&quot;files must be provided for Pyxis authentication.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">PyxisClient</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pyxis_server</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">pyxis_insecure</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">set_get_operator_indices_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set up argparser without extra parameters, this method is used for auto doc generation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">setup_arg_parser</span><span class="p">(</span><span class="n">GET_OPERATORS_INDICES_ARGS</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_operator_indices_main</span><span class="p">(</span><span class="n">sysargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Entrypoint for getting operator indices.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Index images satisfying the specified conditions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">set_get_operator_indices_args</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sysargs</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sysargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>  <span class="c1"># pragma: no cover&quot;</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpfile</span><span class="p">:</span>
+        <span class="n">pyxis_client</span> <span class="o">=</span> <span class="n">setup_pyxis_client</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">pyxis_client</span><span class="o">.</span><span class="n">get_operator_indices</span><span class="p">(</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">ocp_versions_range</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">organization</span>
+        <span class="p">)</span>
+
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">resp</span>
+
+
+<span class="k">def</span> <span class="nf">set_get_repo_metadata_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set up argparser without extra parameters, this method is used for auto doc generation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">setup_arg_parser</span><span class="p">(</span><span class="n">GET_REPO_METADATA_ARGS</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_repo_metadata_main</span><span class="p">(</span><span class="n">sysargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Entrypoint for getting repository metadata.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Metadata of the repository.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">set_get_repo_metadata_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">sysargs</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sysargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>  <span class="c1"># pragma: no cover&quot;</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">only_internal_registry</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">only_partner_registry</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Can&#39;t check only internal registry as well as only partner registry&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpfile</span><span class="p">:</span>
+        <span class="n">pyxis_client</span> <span class="o">=</span> <span class="n">setup_pyxis_client</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pyxis_client</span><span class="o">.</span><span class="n">get_repository_metadata</span><span class="p">(</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">repo_name</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">custom_registry</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">only_internal_registry</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">only_partner_registry</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+
+<span class="k">def</span> <span class="nf">set_upload_signatures_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set up argparser without extra parameters, this method is used for auto doc generation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">setup_arg_parser</span><span class="p">(</span><span class="n">UPLOAD_SIGNATURES_ARGS</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">upload_signatures_main</span><span class="p">(</span><span class="n">sysargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Entrypoint for uploading signatures from JSON or a file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of uploaded signatures including auto-populated fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">set_upload_signatures_args</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sysargs</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sysargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>  <span class="c1"># pragma: no cover&quot;</span>
+
+    <span class="n">signatures_json</span> <span class="o">=</span> <span class="n">serialize_to_json</span><span class="p">(</span><span class="n">deserialize_list_from_arg</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">signatures</span><span class="p">))</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpfile</span><span class="p">:</span>
+        <span class="n">pyxis_client</span> <span class="o">=</span> <span class="n">setup_pyxis_client</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">pyxis_client</span><span class="o">.</span><span class="n">upload_signatures</span><span class="p">(</span><span class="n">signatures_json</span><span class="p">)</span>
+
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">resp</span>
+
+
+<div class="viewcode-block" id="deserialize_list_from_arg"><a class="viewcode-back" href="../../../ops_helpers.html#pubtools._pyxis.pyxis_ops.deserialize_list_from_arg">[docs]</a><span class="k">def</span> <span class="nf">deserialize_list_from_arg</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">csv_input</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Conditionally load contents of a file if specified in argument value.</span>
+
+<span class="sd">    Detects whether the value is a reference to a file (@-prefixed like in</span>
+<span class="sd">    `gcc -o`, `curl -d`, etc.) and returns its contents in list if applicable;</span>
+<span class="sd">    otherwise returns the value as a list.</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        `{&quot;foo&quot;}` -- plain string, returned as a list</span>
+<span class="sd">        `@items.json` -- file path; its contents are returned in a list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">csv_input</span><span class="p">:</span>
+            <span class="c1"># convert comma separated string into list</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="c1"># convert json string into list</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="c1"># all file content is returned as list</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="serialize_to_json"><a class="viewcode-back" href="../../../ops_helpers.html#pubtools._pyxis.pyxis_ops.serialize_to_json">[docs]</a><span class="k">def</span> <span class="nf">serialize_to_json</span><span class="p">(</span><span class="n">list_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert any python list to json.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">list_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="serialize_to_csv_from_list"><a class="viewcode-back" href="../../../ops_helpers.html#pubtools._pyxis.pyxis_ops.serialize_to_csv_from_list">[docs]</a><span class="k">def</span> <span class="nf">serialize_to_csv_from_list</span><span class="p">(</span><span class="n">list_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a list to comma separated string.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">list_value</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">set_get_signatures_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set up argparser without extra parameters, this method is used for auto doc generation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">setup_arg_parser</span><span class="p">(</span><span class="n">GET_SIGNATURES_ARGS</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_signatures_main</span><span class="p">(</span><span class="n">sysargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Entrypoint for getting container signature metadata.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: container signature metadata satisfying the specified conditions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">set_get_signatures_args</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sysargs</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sysargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>  <span class="c1"># pragma: no cover&quot;</span>
+
+    <span class="n">csv_references</span> <span class="o">=</span> <span class="n">csv_manifest_digests</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">manifest_digest</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Give atleast 1 filter, --manifest-digest and/or --reference&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">manifest_digest</span><span class="p">:</span>
+        <span class="n">csv_manifest_digests</span> <span class="o">=</span> <span class="n">serialize_to_csv_from_list</span><span class="p">(</span>
+            <span class="n">deserialize_list_from_arg</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">manifest_digest</span><span class="p">,</span> <span class="n">csv_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">:</span>
+        <span class="n">csv_references</span> <span class="o">=</span> <span class="n">serialize_to_csv_from_list</span><span class="p">(</span>
+            <span class="n">deserialize_list_from_arg</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">csv_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpfile</span><span class="p">:</span>
+        <span class="n">pyxis_client</span> <span class="o">=</span> <span class="n">setup_pyxis_client</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pyxis_client</span><span class="o">.</span><span class="n">get_container_signatures</span><span class="p">(</span>
+            <span class="n">csv_manifest_digests</span><span class="p">,</span> <span class="n">csv_references</span>
+        <span class="p">)</span>
+
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+
+<span class="k">def</span> <span class="nf">set_delete_signatures_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set up argparser without extra parameters, this method is used for auto doc generation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">setup_arg_parser</span><span class="p">(</span><span class="n">DELETE_SIGNATURES_ARGS</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">delete_signatures_main</span><span class="p">(</span><span class="n">sysargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Entrypoint for removing existing signatures.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Signatures which were deleted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">set_delete_signatures_args</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sysargs</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sysargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>  <span class="c1"># pragma: no cover&quot;</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
+        <span class="n">signature_ids</span> <span class="o">=</span> <span class="n">deserialize_list_from_arg</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ids</span><span class="p">,</span> <span class="n">csv_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpfile</span><span class="p">:</span>
+        <span class="n">pyxis_client</span> <span class="o">=</span> <span class="n">setup_pyxis_client</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">pyxis_client</span><span class="o">.</span><span class="n">delete_container_signatures</span><span class="p">(</span><span class="n">signature_ids</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Red Hat.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

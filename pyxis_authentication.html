@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Pyxis Authentication &mdash; pubtools-pyxis 1.2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pyxis Session" href="pyxis_session.html" />
+    <link rel="prev" title="Modules reference" href="modules_reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pubtools-pyxis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">pubtools-pyxis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entrypoints_reference.html">Entrypoints reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules_reference.html">Modules reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pyxis Authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-class-signature">Base class signature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#children-classes">Children classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyxis_session.html">Pyxis Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyxis_client.html">Pyxis Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ops_helpers.html">Entrypoint helper functions</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">ChangeLog</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pubtools-pyxis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules_reference.html">Modules reference</a> &raquo;</li>
+        
+      <li>Pyxis Authentication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pyxis_authentication.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pubtools._pyxis.pyxis_authentication">
+<span id="pyxis-authentication"></span><h1>Pyxis Authentication<a class="headerlink" href="#module-pubtools._pyxis.pyxis_authentication" title="Permalink to this headline">¶</a></h1>
+<p>Classes used for authenticating with Pyxis. Each class performs a different authentication type. Inheritence of the base class, PyxisAuth is used to ensure that the required methods have been implemented.</p>
+<p>The method ‘apply_to_session’ applies the authentication to the Session object. It should generally be the only method that needs to be used.</p>
+<p>Currently, two authentication types are supported: Kerberos and SSL.</p>
+<div class="section" id="base-class-signature">
+<h2>Base class signature<a class="headerlink" href="#base-class-signature" title="Permalink to this headline">¶</a></h2>
+<p>The base class dictates which methods must be implemented in the children classes.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisAuth">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_authentication.</span></span><span class="sig-name descname"><span class="pre">PyxisAuth</span></span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisAuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base Auth class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisAuth.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisAuth.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisAuth.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisAuth.apply_to_session">
+<span class="sig-name descname"><span class="pre">apply_to_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pyxis_session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisAuth.apply_to_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisAuth.apply_to_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up initialization in the Pyxis session.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="children-classes">
+<h2>Children classes<a class="headerlink" href="#children-classes" title="Permalink to this headline">¶</a></h2>
+<p>These classes perform the actual authentication. More may be added if different authentication type is required.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisSSLAuth">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_authentication.</span></span><span class="sig-name descname"><span class="pre">PyxisSSLAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crt_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisSSLAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisSSLAuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>SSL Auth provider to PyxisClient.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisSSLAuth.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crt_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisSSLAuth.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisSSLAuth.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>crt_path (str)</dt><dd><p>Path to .crt file (signed certificate).</p>
+</dd>
+<dt>key_path (str)</dt><dd><p>Path to .key file (private key).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisSSLAuth.apply_to_session">
+<span class="sig-name descname"><span class="pre">apply_to_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pyxis_session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisSSLAuth.apply_to_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisSSLAuth.apply_to_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up PyxisSession with SSL auth.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>pyxis_session (PyxisSession)</dt><dd><p>PyxisSession instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisKrbAuth">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_authentication.</span></span><span class="sig-name descname"><span class="pre">PyxisKrbAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">krb_princ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ktfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccache_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisKrbAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisKrbAuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kerberos authentication support for PyxisClient.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisKrbAuth.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">krb_princ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ktfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccache_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisKrbAuth.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisKrbAuth.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>krb_princ (str)</dt><dd><p>Kerberos principal for obtaining ticket.</p>
+</dd>
+<dt>service (str)</dt><dd><p>URL of the service to apply the authentication to.</p>
+</dd>
+<dt>ktfile (str)</dt><dd><p>Kerberos client keytab file.</p>
+</dd>
+<dt>ccache_file (str)</dt><dd><p>Path to a file used for ccache. Only necessary if kinit will be used.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisKrbAuth.apply_to_session">
+<span class="sig-name descname"><span class="pre">apply_to_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pyxis_session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisKrbAuth.apply_to_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisKrbAuth.apply_to_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up PyxisSession with Kerberos auth.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>pyxis_session (PyxisSession)</dt><dd><p>PyxisSession instance</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._pyxis.pyxis_authentication.PyxisKrbAuth._krb_auth">
+<span class="sig-name descname"><span class="pre">_krb_auth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_authentication.html#PyxisKrbAuth._krb_auth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_authentication.PyxisKrbAuth._krb_auth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pyxis_session.html" class="btn btn-neutral float-right" title="Pyxis Session" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules_reference.html" class="btn btn-neutral float-left" title="Modules reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Red Hat.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

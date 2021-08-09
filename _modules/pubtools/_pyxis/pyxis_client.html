@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pubtools._pyxis.pyxis_client &mdash; pubtools-pyxis 1.2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pubtools-pyxis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">pubtools-pyxis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../entrypoints_reference.html">Entrypoints reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules_reference.html">Modules reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">ChangeLog</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pubtools-pyxis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pubtools._pyxis.pyxis_client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pubtools._pyxis.pyxis_client</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">HTTPError</span>
+<span class="kn">from</span> <span class="nn">.pyxis_session</span> <span class="kn">import</span> <span class="n">PyxisSession</span>
+
+
+<span class="c1"># pylint: disable=bad-option-value,useless-object-inheritance</span>
+<div class="viewcode-block" id="PyxisClient"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient">[docs]</a><span class="k">class</span> <span class="nc">PyxisClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pyxis requests wrapper.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PyxisClient.__init__"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hostname</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">backoff_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hostname (str)</span>
+<span class="sd">                Pyxis service hostname.</span>
+<span class="sd">            retries (int)</span>
+<span class="sd">                number of http retries for Pyxis requests.</span>
+<span class="sd">            auth (PyxisAuth)</span>
+<span class="sd">                PyxisAuth subclass instance.</span>
+<span class="sd">            backoff_factor (int)</span>
+<span class="sd">                backoff factor to apply between attempts after the second try.</span>
+<span class="sd">            verify (bool)</span>
+<span class="sd">                enable/disable SSL CA verification.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span> <span class="o">=</span> <span class="n">PyxisSession</span><span class="p">(</span>
+            <span class="n">hostname</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="n">retries</span><span class="p">,</span> <span class="n">backoff_factor</span><span class="o">=</span><span class="n">backoff_factor</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">auth</span><span class="p">:</span>
+            <span class="n">auth</span><span class="o">.</span><span class="n">apply_to_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyxisClient.get_operator_indices"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.get_operator_indices">[docs]</a>    <span class="k">def</span> <span class="nf">get_operator_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ocp_versions_range</span><span class="p">,</span> <span class="n">organization</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of index images satisfying versioning and organization conditions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ocp_versions_range (str)</span>
+<span class="sd">                Supported OCP versions range.</span>
+<span class="sd">            organization (str)</span>
+<span class="sd">                Organization understood by IIB.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of index images satisfying the conditions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ocp_versions_range&quot;</span><span class="p">:</span> <span class="n">ocp_versions_range</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">organization</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;organization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">organization</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;operators/indices&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PyxisClient.get_repository_metadata"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.get_repository_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_repository_metadata</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">,</span> <span class="n">custom_registry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_internal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_partner</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get metadata of a Comet repository.</span>
+
+<span class="sd">        If checking only one registry hasn&#39;t been specified, check both with precedence on</span>
+<span class="sd">        the internal registry.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            repo_name (str):</span>
+<span class="sd">                Name of the repository.</span>
+<span class="sd">            custom_registry (str):</span>
+<span class="sd">                Use a custom registry address instead of the default ones.</span>
+<span class="sd">            only_internal (bool):</span>
+<span class="sd">                Whether to only check internal registry.</span>
+<span class="sd">            only_partner (bool):</span>
+<span class="sd">                Whether to only check partner registry.</span>
+<span class="sd">        Returns (dict):</span>
+<span class="sd">            Metadata of the repository.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">internal_registry</span> <span class="o">=</span> <span class="s2">&quot;registry.access.redhat.com&quot;</span>
+        <span class="n">partner_registry</span> <span class="o">=</span> <span class="s2">&quot;registry.connect.redhat.com&quot;</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="s2">&quot;repositories/registry/</span><span class="si">{0}</span><span class="s2">/repository/</span><span class="si">{1}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">custom_registry</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">custom_registry</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">only_internal</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">internal_registry</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">only_partner</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">partner_registry</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">internal_registry</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">))</span>
+            <span class="c1"># if &#39;not found&#39; error, try another registry</span>
+            <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">endpoint</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">partner_registry</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PyxisClient.upload_signatures"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.upload_signatures">[docs]</a>    <span class="k">def</span> <span class="nf">upload_signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signatures</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upload signatures from given JSON string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            signatures (str)</span>
+<span class="sd">                JSON with signatures to upload.  See Pyxis API for details.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of uploaded signatures including auto-populated fields.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;signatures&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">signatures</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_response</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyxisClient._parse_response"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient._parse_response">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get JSON from given response or raise an informative exception.</span>
+
+<span class="sd">        Uses `requests.raise_for_status()` but tries to extract more details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># the response may contain useful JSON even in case of 40x/50x</span>
+        <span class="c1"># but it can&#39;t be guaranteed</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># Python 2.x compat</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># We&#39;ve got an error, but by default the exception contains only</span>
+            <span class="c1"># minimal information: status code (400) and reason (Client error).</span>
+            <span class="c1"># If the JSON was successfully parsed earlier, it may contain</span>
+            <span class="c1"># important details (e.g. &quot;Maximum of 100 signatures are allowed&quot;).</span>
+            <span class="n">extra_msg</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;detail&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;detail&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+            <span class="c1"># re-raise the exception with an extra message</span>
+            <span class="k">raise</span> <span class="n">HTTPError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="se">\n</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">extra_msg</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="PyxisClient.get_container_signatures"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.get_container_signatures">[docs]</a>    <span class="k">def</span> <span class="nf">get_container_signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest_digests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of signature metadata matching given fields.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            manifest_digests (comma separated str)</span>
+<span class="sd">                manifest_digest used for searching in signatures.</span>
+<span class="sd">            references (comma separated str)</span>
+<span class="sd">                pull reference for image of signature stored.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of signature metadata matching given fields.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">signatures_endpoint</span> <span class="o">=</span> <span class="s2">&quot;signatures&quot;</span>
+        <span class="n">filter_criteria</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">manifest_digests</span><span class="p">:</span>
+            <span class="n">filter_criteria</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;manifest_digest=in=(</span><span class="si">{0}</span><span class="s2">),&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">manifest_digests</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">references</span><span class="p">:</span>
+            <span class="n">filter_criteria</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;reference=in=(</span><span class="si">{0}</span><span class="s2">),&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">references</span><span class="p">))</span>
+
+        <span class="n">signatures_endpoint</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0}{1}{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">signatures_endpoint</span><span class="p">,</span> <span class="s2">&quot;?filter=&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filter_criteria</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">signatures_endpoint</span> <span class="o">=</span> <span class="n">signatures_endpoint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_items_from_all_pages</span><span class="p">(</span><span class="n">signatures_endpoint</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+<div class="viewcode-block" id="PyxisClient._get_items_from_all_pages"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient._get_items_from_all_pages">[docs]</a>    <span class="k">def</span> <span class="nf">_get_items_from_all_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get response from all pages of pyxis.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            endpoint (str): Endpoint of the request.</span>
+<span class="sd">            **kwargs: Additional arguments to add to the requests method.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list: list of all data records returned from pyxis</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_resp</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">first_resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">first_resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">first_resp_json</span> <span class="o">=</span> <span class="n">first_resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">all_resp</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">first_resp_json</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+        <span class="c1"># if total data is greater than data returned in first page,</span>
+        <span class="c1"># calculate number of pages and then consequently get response from each page</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_resp_json</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">first_resp_json</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]:</span>
+            <span class="n">total_pages</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">first_resp_json</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">first_resp_json</span><span class="p">[</span><span class="s2">&quot;page_size&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">):</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="n">page</span><span class="p">}</span>
+                <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+                <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+                <span class="n">all_resp</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">all_resp</span></div>
+
+<div class="viewcode-block" id="PyxisClient.delete_container_signatures"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.delete_container_signatures">[docs]</a>    <span class="k">def</span> <span class="nf">delete_container_signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signature_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete signatures matching given fields.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            signature_ids ([str])</span>
+<span class="sd">                Internal Pyxis signature IDs of signatures which should be removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delete_endpoint</span> <span class="o">=</span> <span class="s2">&quot;signatures/id/</span><span class="si">{id}</span><span class="s2">&quot;</span>
+
+        <span class="k">for</span> <span class="n">signature_id</span> <span class="ow">in</span> <span class="n">signature_ids</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">delete_endpoint</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">signature_id</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Red Hat.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
