@@ -1,75 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>pubtools._pyxis.pyxis_client &mdash; pubtools-pyxis 1.2.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> pubtools-pyxis
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 1.2.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +36,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">pubtools-pyxis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../entrypoints_reference.html">Entrypoints reference</a></li>
@@ -98,73 +46,41 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">ChangeLog</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">pubtools-pyxis</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
       <li>pubtools._pyxis.pyxis_client</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for pubtools._pyxis.pyxis_client</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">as_completed</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="kn">from</span> <span class="nn">more_executors</span> <span class="kn">import</span> <span class="n">Executors</span>
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">HTTPError</span>
+
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_REQUEST_THREADS_LIMIT</span>
 <span class="kn">from</span> <span class="nn">.pyxis_session</span> <span class="kn">import</span> <span class="n">PyxisSession</span>
 
 
@@ -179,6 +95,7 @@
         <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">backoff_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">threads</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_THREADS_LIMIT</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize.</span>
@@ -194,12 +111,37 @@
 <span class="sd">                backoff factor to apply between attempts after the second try.</span>
 <span class="sd">            verify (bool)</span>
 <span class="sd">                enable/disable SSL CA verification.</span>
+<span class="sd">            threads (int)</span>
+<span class="sd">                the number of threads to use for parallel requests.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span> <span class="o">=</span> <span class="n">PyxisSession</span><span class="p">(</span>
-            <span class="n">hostname</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="n">retries</span><span class="p">,</span> <span class="n">backoff_factor</span><span class="o">=</span><span class="n">backoff_factor</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session_factory</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">PyxisSession</span><span class="p">,</span>
+            <span class="n">hostname</span><span class="p">,</span>
+            <span class="n">retries</span><span class="o">=</span><span class="n">retries</span><span class="p">,</span>
+            <span class="n">backoff_factor</span><span class="o">=</span><span class="n">backoff_factor</span><span class="p">,</span>
+            <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">auth</span><span class="p">:</span>
-            <span class="n">auth</span><span class="o">.</span><span class="n">apply_to_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_auth</span> <span class="o">=</span> <span class="n">auth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threads_limit</span> <span class="o">=</span> <span class="n">threads</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pyxis_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a thread-local session for Pyxis requests.</span>
+
+<span class="sd">        If a session did not exist for current thread, it is initialized and</span>
+<span class="sd">        cached.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span><span class="p">,</span> <span class="s2">&quot;pyxis_session&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span><span class="o">.</span><span class="n">pyxis_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_session</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span><span class="o">.</span><span class="n">pyxis_session</span>
+
+    <span class="k">def</span> <span class="nf">_make_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_factory</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auth</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_auth</span><span class="o">.</span><span class="n">apply_to_session</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">session</span>
 
 <div class="viewcode-block" id="PyxisClient.get_operator_indices"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.get_operator_indices">[docs]</a>    <span class="k">def</span> <span class="nf">get_operator_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ocp_versions_range</span><span class="p">,</span> <span class="n">organization</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a list of index images satisfying versioning and organization conditions.</span>
@@ -272,14 +214,42 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            list: List of uploaded signatures including auto-populated fields.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;signatures&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">signatures</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_response</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+        <span class="k">def</span> <span class="nf">_send_post_request</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;signatures&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PyxisClient._parse_response"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient._parse_response">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_parallel_requests</span><span class="p">(</span><span class="n">_send_post_request</span><span class="p">,</span> <span class="n">signatures</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyxisClient._do_parallel_requests"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient._do_parallel_requests">[docs]</a>    <span class="k">def</span> <span class="nf">_do_parallel_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">make_request</span><span class="p">,</span> <span class="n">data_items</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call given function with given data items in parallel, collect responses.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            make_request (function): a function that does the actual request.</span>
+<span class="sd">                Must accept a single argument: a data item.</span>
+<span class="sd">                Must return a `requests.models.Response` object.</span>
+<span class="sd">            data_items (list): a list of arbitrary objects to be passed</span>
+<span class="sd">                individually to `make_request()`.</span>
+
+<span class="sd">        The number of parallel requests is defined by</span>
+<span class="sd">        `DEFAULT_REQUEST_THREADS_LIMIT` (can be overridden by the user) and</span>
+<span class="sd">        of course by the number of actually available threads.</span>
+
+<span class="sd">        If a response fails consistently (see `PyxisSession` for retry policy),</span>
+<span class="sd">        the execution is terminated and an informative error is raised.</span>
+<span class="sd">        See `PyxisClient._handle_json_response()` for details.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list(dict): list of dictionaries extracted from responses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">Executors</span><span class="o">.</span><span class="n">thread_pool</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threads_limit</span><span class="p">)</span><span class="o">.</span><span class="n">with_map</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle_json_response</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">make_request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_items</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="PyxisClient._handle_json_response"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient._handle_json_response">[docs]</a>    <span class="k">def</span> <span class="nf">_handle_json_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get JSON from given response or raise an informative exception.</span>
 
@@ -379,46 +349,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Red Hat.
-
-    </p>
+    <p>&#169; Copyright 2020, Red Hat.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

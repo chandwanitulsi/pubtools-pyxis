@@ -11,7 +11,8 @@ Class for performing actual Pyxis queries and handling related logic.
    .. automethod:: get_operator_indices
    .. automethod:: get_repository_metadata
    .. automethod:: upload_signatures
-   .. automethod:: _parse_response
+   .. automethod:: _do_parallel_requests
+   .. automethod:: _handle_json_response
    .. automethod:: get_container_signatures
    .. automethod:: _get_items_from_all_pages
    .. automethod:: delete_container_signatures
