@@ -80,7 +80,7 @@
 <div class="viewcode-block" id="PyxisSession"><a class="viewcode-back" href="../../../pyxis_session.html#pubtools._pyxis.pyxis_session.PyxisSession">[docs]</a><span class="k">class</span> <span class="nc">PyxisSession</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper class to support Pyxis requests and authentication.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PyxisSession.__init__"><a class="viewcode-back" href="../../../pyxis_session.html#pubtools._pyxis.pyxis_session.PyxisSession.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">backoff_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="PyxisSession.__init__"><a class="viewcode-back" href="../../../pyxis_session.html#pubtools._pyxis.pyxis_session.PyxisSession.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">backoff_factor</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize.</span>
 
@@ -99,12 +99,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="n">verify</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">krb5ccname_path</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="n">status_forcelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">429</span><span class="p">]</span>
         <span class="n">retry</span> <span class="o">=</span> <span class="n">Retry</span><span class="p">(</span>
             <span class="n">total</span><span class="o">=</span><span class="n">retries</span><span class="p">,</span>
             <span class="n">read</span><span class="o">=</span><span class="n">retries</span><span class="p">,</span>
             <span class="n">connect</span><span class="o">=</span><span class="n">retries</span><span class="p">,</span>
             <span class="n">backoff_factor</span><span class="o">=</span><span class="n">backoff_factor</span><span class="p">,</span>
-            <span class="n">status_forcelist</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">512</span><span class="p">)),</span>
+            <span class="n">status_forcelist</span><span class="o">=</span><span class="n">status_forcelist</span><span class="p">,</span>
+            <span class="n">method_whitelist</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;HEAD&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;OPTIONS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;TRACE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
         <span class="p">)</span>
         <span class="n">adapter</span> <span class="o">=</span> <span class="n">HTTPAdapter</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="n">retry</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;http://&quot;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
@@ -171,7 +181,11 @@
         <span class="k">if</span> <span class="s2">&quot;http://&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="ow">and</span> <span class="s2">&quot;https://&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;https://</span><span class="si">%s</span><span class="s2">/v1/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span> <span class="n">endpoint</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/v1/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span> <span class="n">endpoint</span><span class="p">)</span></div></div>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/v1/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span> <span class="n">endpoint</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Close the current session.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

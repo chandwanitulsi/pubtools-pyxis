@@ -91,9 +91,9 @@
 <div class="viewcode-block" id="PyxisClient.__init__"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">hostname</span><span class="p">,</span>
-        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">backoff_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">backoff_factor</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">threads</span><span class="o">=</span><span class="n">DEFAULT_REQUEST_THREADS_LIMIT</span><span class="p">,</span>
     <span class="p">):</span>
@@ -216,9 +216,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">_send_post_request</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;signatures&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;signatures&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="c1"># SEE CLOUDDST-9698</span>
+            <span class="c1"># Pyxis returns 500 error due to a potential sidecar config issue</span>
+            <span class="c1"># As a workaround to that, it was suggested to clear the session</span>
+            <span class="c1"># establish a new connection and again retry</span>
+            <span class="c1"># After creating a new session and retrying, the request should succeed</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">500</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clear_session</span><span class="p">()</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;signatures&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_parallel_requests</span><span class="p">(</span><span class="n">_send_post_request</span><span class="p">,</span> <span class="n">signatures</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_clear_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span><span class="o">.</span><span class="n">pyxis_session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span><span class="p">,</span> <span class="s2">&quot;pyxis_session&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PyxisClient._do_parallel_requests"><a class="viewcode-back" href="../../../pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient._do_parallel_requests">[docs]</a>    <span class="k">def</span> <span class="nf">_do_parallel_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">make_request</span><span class="p">,</span> <span class="n">data_items</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
