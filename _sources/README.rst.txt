@@ -9,7 +9,6 @@ Kerberos and SSL based authentication is supported. The purpose of the library i
 Requirements
 ============
 
-* Python 2.6+
 * Python 3.6+
 
 Features

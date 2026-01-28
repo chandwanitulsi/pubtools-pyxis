@@ -1,20 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delete container image signatures &mdash; pubtools-pyxis 1.2.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,14 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> pubtools-pyxis
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pubtools-pyxis
           </a>
-              <div class="version">
-                1.2.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -49,7 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="get_signatures.html">Get container image signatures</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Delete container image signatures</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#cli-reference">CLI reference</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._pyxis.pyxis_ops-set_delete_signatures_args-named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
@@ -76,9 +78,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="entrypoints_reference.html">Entrypoints reference</a> &raquo;</li>
-      <li>Delete container image signatures</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="entrypoints_reference.html">Entrypoints reference</a></li>
+      <li class="breadcrumb-item active">Delete container image signatures</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/delete_signatures.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -89,11 +91,11 @@
            <div itemprop="articleBody">
              
   <section id="module-pubtools._pyxis.pyxis_ops">
-<span id="delete-container-image-signatures"></span><h1>Delete container image signatures<a class="headerlink" href="#module-pubtools._pyxis.pyxis_ops" title="Permalink to this headline"></a></h1>
+<span id="delete-container-image-signatures"></span><h1>Delete container image signatures<a class="headerlink" href="#module-pubtools._pyxis.pyxis_ops" title="Link to this heading"></a></h1>
 <p>Delete existing container image signatures with matching internal IDs.</p>
 <p>The IDs can be gathered by using the pubtools-pyxis-get-signatures entrypoint. The reason for using internal IDs is to ensure the unambiguity of the to-be-removed signatures.</p>
 <section id="cli-reference">
-<h2>CLI reference<a class="headerlink" href="#cli-reference" title="Permalink to this headline"></a></h2>
+<h2>CLI reference<a class="headerlink" href="#cli-reference" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pyxis</span><span class="o">-</span><span class="n">delete</span><span class="o">-</span><span class="n">signatures</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">--</span><span class="n">pyxis</span><span class="o">-</span><span class="n">server</span> <span class="n">PYXIS_SERVER</span>
                                         <span class="p">[</span><span class="o">--</span><span class="n">pyxis</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
                                         <span class="p">[</span><span class="o">--</span><span class="n">pyxis</span><span class="o">-</span><span class="n">krb</span><span class="o">-</span><span class="n">principal</span> <span class="n">PYXIS_KRB_PRINCIPAL</span><span class="p">]</span>
@@ -101,10 +103,11 @@
                                         <span class="p">[</span><span class="o">--</span><span class="n">pyxis</span><span class="o">-</span><span class="n">ssl</span><span class="o">-</span><span class="n">crtfile</span> <span class="n">PYXIS_SSL_CRTFILE</span><span class="p">]</span>
                                         <span class="p">[</span><span class="o">--</span><span class="n">pyxis</span><span class="o">-</span><span class="n">ssl</span><span class="o">-</span><span class="n">keyfile</span> <span class="n">PYXIS_SSL_KEYFILE</span><span class="p">]</span>
                                         <span class="o">--</span><span class="n">ids</span> <span class="n">IDS</span>
+                                        <span class="p">[</span><span class="o">--</span><span class="n">request</span><span class="o">-</span><span class="n">threads</span> <span class="n">REQUEST_THREADS</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h3>
+<section id="pubtools._pyxis.pyxis_ops-set_delete_signatures_args-named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#pubtools._pyxis.pyxis_ops-set_delete_signatures_args-named-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>--pyxis-server</kbd></dt>
 <dd><p>Pyxis service hostname</p>
@@ -127,11 +130,15 @@
 <dt><kbd>--ids</kbd></dt>
 <dd><p>comma separated signature IDs to remove or json file when prefixed with &#64;</p>
 </dd>
+<dt><kbd>--request-threads</kbd></dt>
+<dd><p>Maximum number of threads to use for parallel requests</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">16</span></code></p>
+</dd>
 </dl>
 </section>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <p>NOTE: The demonstration of various authentication types can be seen in “Get operator indices” entrypoint examples.</p>
 <p>Get multiple signatures with specified IDs</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pyxis</span><span class="o">-</span><span class="n">delete</span><span class="o">-</span><span class="n">signatures</span> \

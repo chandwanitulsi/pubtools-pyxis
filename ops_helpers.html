@@ -1,20 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Entrypoint helper functions &mdash; pubtools-pyxis 1.2.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,14 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> pubtools-pyxis
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pubtools-pyxis
           </a>
-              <div class="version">
-                1.2.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -48,7 +50,12 @@
 <li class="toctree-l2"><a class="reference internal" href="pyxis_session.html">Pyxis Session</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyxis_client.html">Pyxis Client</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Entrypoint helper functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#main-entrypoint-functions">Main entrypoint functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main-entrypoint-functions">Main entrypoint functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._pyxis.pyxis_ops.setup_pyxis_client"><code class="docutils literal notranslate"><span class="pre">setup_pyxis_client()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._pyxis.pyxis_ops.deserialize_list_from_arg"><code class="docutils literal notranslate"><span class="pre">deserialize_list_from_arg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._pyxis.pyxis_ops.serialize_to_csv_from_list"><code class="docutils literal notranslate"><span class="pre">serialize_to_csv_from_list()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -71,9 +78,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules_reference.html">Modules reference</a> &raquo;</li>
-      <li>Entrypoint helper functions</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules_reference.html">Modules reference</a></li>
+      <li class="breadcrumb-item active">Entrypoint helper functions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/ops_helpers.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -84,13 +91,13 @@
            <div itemprop="articleBody">
              
   <section id="module-pubtools._pyxis.pyxis_ops">
-<span id="entrypoint-helper-functions"></span><h1>Entrypoint helper functions<a class="headerlink" href="#module-pubtools._pyxis.pyxis_ops" title="Permalink to this headline"></a></h1>
+<span id="entrypoint-helper-functions"></span><h1>Entrypoint helper functions<a class="headerlink" href="#module-pubtools._pyxis.pyxis_ops" title="Link to this heading"></a></h1>
 <p>General helper functions used by the entrypoints.</p>
 <section id="main-entrypoint-functions">
-<h2>Main entrypoint functions<a class="headerlink" href="#main-entrypoint-functions" title="Permalink to this headline"></a></h2>
+<h2>Main entrypoint functions<a class="headerlink" href="#main-entrypoint-functions" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pubtools._pyxis.pyxis_ops.setup_pyxis_client">
-<span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_ops.</span></span><span class="sig-name descname"><span class="pre">setup_pyxis_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccache_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_ops.html#setup_pyxis_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_ops.setup_pyxis_client" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_ops.</span></span><span class="sig-name descname"><span class="pre">setup_pyxis_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccache_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyxis_client.html#pubtools._pyxis.pyxis_client.PyxisClient" title="pubtools._pyxis.pyxis_client.PyxisClient"><span class="pre">PyxisClient</span></a></span></span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_ops.html#setup_pyxis_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_ops.setup_pyxis_client" title="Link to this definition"></a></dt>
 <dd><p>Set up a PyxisClient instance according to specified parameters.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
@@ -107,7 +114,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pubtools._pyxis.pyxis_ops.deserialize_list_from_arg">
-<span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_ops.</span></span><span class="sig-name descname"><span class="pre">deserialize_list_from_arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_ops.html#deserialize_list_from_arg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_ops.deserialize_list_from_arg" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_ops.</span></span><span class="sig-name descname"><span class="pre">deserialize_list_from_arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_ops.html#deserialize_list_from_arg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_ops.deserialize_list_from_arg" title="Link to this definition"></a></dt>
 <dd><p>Conditionally load contents of a file if specified in argument value.</p>
 <p>Detects whether the value is a reference to a file (&#64;-prefixed like in
 <cite>gcc -o</cite>, <cite>curl -d</cite>, etc.) and returns its contents in list if applicable;
@@ -121,7 +128,7 @@ Examples:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pubtools._pyxis.pyxis_ops.serialize_to_csv_from_list">
-<span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_ops.</span></span><span class="sig-name descname"><span class="pre">serialize_to_csv_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_ops.html#serialize_to_csv_from_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_ops.serialize_to_csv_from_list" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pubtools._pyxis.pyxis_ops.</span></span><span class="sig-name descname"><span class="pre">serialize_to_csv_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pubtools/_pyxis/pyxis_ops.html#serialize_to_csv_from_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._pyxis.pyxis_ops.serialize_to_csv_from_list" title="Link to this definition"></a></dt>
 <dd><p>Convert a list to comma separated string.</p>
 </dd></dl>
 
